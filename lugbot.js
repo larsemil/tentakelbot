@@ -36,6 +36,7 @@ let commands = {
 
             if (!elements || elements.length === 0) {
                 msg.reply("Idag är en helt vanlig dag");
+                return;
             }
 
             let days = 'Idag är det ';
@@ -43,10 +44,12 @@ let commands = {
             for (let i = 0; i < elements.length; i++) {
 
                 days += $(elements[i]).text();
+
                 if (i != elements.length - 1) {
                     days += " och ";
                 }
             }
+
             console.log('Saving days in cache');
             datastore.day[today] = days;
 
