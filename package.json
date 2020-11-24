@@ -1,0 +1,19 @@
+{
+  "name": "lugbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lugbot.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "discord.js": "^12.5.0",
+    "dotenv": "^8.2.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Emil Österlund",
+  "license": "GPL-3.0-or-later"
+}
