@@ -35,8 +35,10 @@ class GameNight extends Plugin{
             let gameId = app.gameNights.push(gamenight) -1;
             console.log('Created a gamenight with id ' + gameId);
             console.log(gamenight);
-            let reply = `@here ${name} vill spela ${params[0]}, ${params[1]} klockan ${params[2]}. Skriv !attend ${gameId} för att boka en plats`;
+            let reply = `@here ${name} vill spela spel!`;
             message.channel.send(reply);
+            message.channel.send(app.gameNightTomMessage(gamenight));
+
             app.save();
             
         },
