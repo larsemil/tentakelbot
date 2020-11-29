@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-console.log("Welcome to Rolf. Your interactive bot");
+console.log("Welcome to Tentakelbot. Your interactive bot");
 
 const Discord = require('discord.js')
 const client = new Discord.Client();
@@ -8,19 +8,18 @@ const PluginManager = require('./PluginManager.js');
 
 /* Plugins */
 const GenericPlugin = require('./Plugin.js');
-const KittenPlugin = require('./Kitten.js');
-const StringFunPlugin = require('./StringFun.js');
 const Joker = require('./Joker.js');
-const Agree = require('./Agree.js');
 const Day = require('./Day.js');
+const GameNight = require('./GameNight.js');
 
 var plugins = new PluginManager();
 plugins.register(new GenericPlugin());
-plugins.register(new KittenPlugin());
-plugins.register(new StringFunPlugin());
 plugins.register(new Joker());
-plugins.register(new Agree());
 plugins.register(new Day());
+plugins.register(new GameNight());
+
+
+setInterval(() => {plugins.tick(client)}, 5000);
 
 client.on('ready', () => {
     console.log('I am logged in!');
@@ -31,8 +30,12 @@ client.on('message', msg => {
     if(msg.cleanContent.startsWith("!")){
         var params = msg.cleanContent.split(" ");
         var command = params[0].substring(1);
+
         console.log("Got command " + command);
         
+        //remove command from params
+        params.shift();
+
         if(plugins.hasCommand(command)){
             console.log("There is a plugin to handle this");
 

@@ -1,3 +1,4 @@
 .env
-node_modules/
 package-lock.json
+gameNightData.json
+node_modules/
