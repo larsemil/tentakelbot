@@ -73,7 +73,7 @@ class GameNight extends Plugin{
             gameNight.attendees.push(message.author.username);
             console.log(gameNight.attendees);
             message.reply("Kul att du ska vara med och spela " + gameNight.game + ", vi ses " + gameNight.date +", kl " + gameNight.time);
-            message.reply("Nu finns det" + spotsLeft(gameNight) + " kvar")
+            message.reply("Nu finns det" + app.spotsLeft(gameNight) + " platser kvar")
             app.save();
         },
         'listgames': function(message, params){
