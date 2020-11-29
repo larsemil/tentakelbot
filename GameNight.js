@@ -85,6 +85,8 @@ class GameNight extends Plugin{
                 }
             });
 
+            message.channel.send("Skriv !attend $ID, för att vara med på en kväll");
+
             
         }
     }
