@@ -3,10 +3,10 @@ class Plugin{
 
     commands = {
         'help' :function(message){
-            message.reply('I cannot help you. Yet.')
+            message.reply('I cannot help you. Yet. (its on my todo. !contribute if you want to help');
         },
         'contribute': function(message){
-            message.channel.send("Contribute @ https://github.com/larsemil/lugbot");
+            message.channel.send("Contribute @ https://github.com/larsemil/tentakelbot");
         }
     }
 
