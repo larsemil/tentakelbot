@@ -113,9 +113,9 @@ class GameNight extends Plugin{
             color: 3447003,
             title: gn.game + "ID: " + app.gameNights.indexOf(gn),
             fields: [
-                { name: "Datum", value: gn.date, inline: true},
-                { name: "Tid", value: gn.time, inline: true},
-                { name: "Spelare", value: gn.attendees.length + "/" + gn.maxplayers, inline: true}
+                { name: "Datum", value: gn.date, inline: false},
+                { name: "Tid", value: gn.time, inline: false},
+                { name: "Spelare", value: gn.attendees.length + "/" + gn.maxplayers, inline: false}
                 
             ]
           }

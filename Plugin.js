@@ -39,7 +39,7 @@ class Plugin{
                             {
                                 name: "!" + c,
                                 value: helptext,
-                                inline: true
+                                inline: false
                             }
                         )
                     }
