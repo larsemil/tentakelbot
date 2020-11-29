@@ -6,7 +6,8 @@ class Joker extends Plugin{
     name = "Joker";
 
     help = {
-        'dadjoke' : 'För att skämta lite'
+        'dadjoke' : 'För att skämta lite',
+        'otterjoke': 'Utterskt bra skämt'
     }
 
     jokes =  {
@@ -21,17 +22,34 @@ class Joker extends Plugin{
             ['Hur säger man korridor på japanska?', 'Lång-trång-gång'],
             ['Har du tagit en promenad?', 'Hurså? Saknas det en?'],
             ['Vad kallar man en alligator som ätit upp en GPS?', 'Navigator'],
-            ['När jag åker utomlands tar jag alltid med strumpor med hål i.', 'Jag hoppas att de ska bli stoppade i tullen']
+            ['När jag åker utomlands tar jag alltid med strumpor med hål i.', 'Jag hoppas att de ska bli stoppade i tullen'],
+            ['Hur många bor det i Kanadas huvudstad?', 'Åtta va?'],
+            ['Håkan Juholt får skylla sig själv när han ljög. Han kunde Ju Holt sig till sanningen!'],
+            ['Vet du varför mammutarna dog ut?', 'Nej?', 'Det fanns inga papputar']
+        ],
+        'otterJokes': [
+            ['Var kommer uttrarna ifrån?', 'Uttre världsrymden.'],
+            ['Var klär sig uttrarna i?','Utterrockar.'],
+            ['Vilket språk talar uttrarna?','Uttrikiska.'],
+            ['Hur lagar man till en utter?','Man låter den (p)uttra på svag värme.'],
+            ['Vad äter uttrar?','Morutter.'],
+            ['Vad gör en sur utter?','Han (m)uttrar.'],
+            ['Vad gör uttrarna på upploppet?','De (sp)uttrar'],
+            ['Vad heter en religiös utter?','(L)utter'],
+            ['Vad gör en utelåst utter?','Han sitter utanför utterdörren och huttrar.']
+            ['Hur gammal är uttern?','Det ska jag inte uttra mig om!']
         ]
     };
 
     commands = {
         'dadjoke' :function(message, params){
             var joke = app.jokes.dadJokes[random.int(0, app.jokes.dadJokes.length -1)];
-            message.channel.send(joke[0]);
-            setTimeout(function (message,joke) {
-                message.channel.send(joke[1])
-            }, 2000,message,joke)
+            app.sendJoke(message, joke);
+            
+        },
+        'otterjoke': function(message,params){
+            var joke = app.jokes.otterJokes[random.int(0,app.jokes.otterJokes.length -1)];
+            app.sendJoke(message, joke);
         }
     }
 
@@ -39,6 +57,13 @@ class Joker extends Plugin{
     init(){
         super.init()
         app = this;
+    }
+    sendJoke(message,joke){
+        for(let i = 0; i < joke.length; i++){
+            setTimeout(() => {
+                message.channel.send(joke[i]);
+            }, i*2000,message,joke);
+        }
     }
 }
 module.exports = Joker;
