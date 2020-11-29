@@ -111,7 +111,7 @@ class GameNight extends Plugin{
     gameNightTomMessage(gn){
         return {embed: {
             color: 3447003,
-            title: gn.game + "ID: " + app.gameNights.indexOf(gn),
+            title: gn.game + " ID: " + app.gameNights.indexOf(gn),
             fields: [
                 { name: "Datum", value: gn.date, inline: false},
                 { name: "Tid", value: gn.time, inline: false},
