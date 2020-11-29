@@ -134,7 +134,7 @@ class GameNight extends Plugin{
 
             let timeDifference = new Date(gn.date) - new Date();
             let days = timeDifference / (1000 * 60 * 60 * 24);
-            console.log(gn.game + " has " + days + "until playing");
+            //console.log(gn.game + " has " + days + "until playing");
             if(days < 1){
                 console.log(gn.game + " has less than 1 day until playing. Reminding people!");
 
