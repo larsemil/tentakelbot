@@ -38,6 +38,7 @@ class GameNight extends Plugin{
             let reply = `@here ${name} vill spela spel!`;
             message.channel.send(reply);
             message.channel.send(app.gameNightTomMessage(gamenight));
+            message.channel.send("skriv !attend" + gameId +" för att vara med")
 
             app.save();
             
@@ -107,7 +108,7 @@ class GameNight extends Plugin{
     gameNightTomMessage(gn){
         return {embed: {
             color: 3447003,
-            title: gn.game,
+            title: gn.game + "ID: " + app.gameNights.indexOf(gn),
             fields: [
                 { name: "Datum", value: gn.date, inline: true},
                 { name: "Tid", value: gn.time, inline: true},
