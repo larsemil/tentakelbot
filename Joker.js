@@ -5,6 +5,9 @@ var app = null;
 class Joker extends Plugin{
     name = "Joker";
 
+    help = {
+        'dadjoke' : 'För att skämta lite'
+    }
 
     jokes =  {
         'dadJokes': [

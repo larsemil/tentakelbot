@@ -12,7 +12,8 @@ class GameNight extends Plugin{
 
     help = {
         'gamenight': 'För att skapa ett speltillfälle skriv: !gamenight Wingspan 2020-12-12 20:00  5, där sista 5 är antalet spelare(frivilligt)',
-        'attend': 'För att delta i ett speltillfälle skriv: !attend n, där n är det spel du vill vara med på.'
+        'attend': 'För att delta i ett speltillfälle skriv: !attend n, där n är det spel du vill vara med på.',
+        'listgames': 'Lista alla kommande speltillfällen'
     }
 
     commands = {

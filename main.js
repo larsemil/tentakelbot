@@ -26,7 +26,11 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-    console.log('got message');
+    console.log('got message from ' + msg.author.username);
+    if(msg.author == client.user){
+        console.log("Message from myself. Ignoring. I am not one to talk to myself");
+        return; // from myself
+    }
     if(msg.cleanContent.startsWith("!")){
         var params = msg.cleanContent.split(" ");
         var command = params[0].substring(1);

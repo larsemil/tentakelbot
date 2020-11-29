@@ -13,8 +13,8 @@ class PluginManager{
     register(plugin){
         app = this;
         plugin.init();
-        var _commands = plugin.getCommands();
-        Object.keys(_commands).forEach( (command) => {
+        plugin.setPluginManager(this);
+        plugin.getCommands().forEach( (command) => {
             console.log('Plugin has ' + command)
             this.commands[command] = plugin;
 
@@ -29,6 +29,9 @@ class PluginManager{
 
        // console.log(util.inspect(this.commands, {showHidden: false, depth: null}))
 
+    }
+    getCommands(){
+        return Object.keys(this.commands);
     }
 
     hasCommand(command){
@@ -45,6 +48,10 @@ class PluginManager{
         } catch (err) {
             console.log(err)
         }
+    }
+
+    getPluginForCommand(command){
+        return this.commands[command] || null;
     }
 
     tick(client){
