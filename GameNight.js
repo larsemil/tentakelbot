@@ -11,9 +11,10 @@ class GameNight extends Plugin{
     
 
     help = {
-        'gamenight': 'För att skapa ett speltillfälle skriv: !gamenight Wingspan 2020-12-12 20:00  5, där sista 5 är antalet spelare(frivilligt)',
+        'gamenight': 'För att skapa ett speltillfälle skriv: !gamenight Wingspan 2020-12-12 20:00 usernameFördenSomHostar 5, där sista 5 är antalet spelare(frivilligt)',
         'attend': 'För att delta i ett speltillfälle skriv: !attend n, där n är det spel du vill vara med på.',
-        'listgames': 'Lista alla kommande speltillfällen'
+        'listgames': 'Lista alla kommande speltillfällen',
+        'gameinfo': 'För att få detaljerad info om ett speltillfälle skriv: !gameinfo n, där n är det spel du vill ha information om'
     }
 
     commands = {
@@ -27,15 +28,20 @@ class GameNight extends Plugin{
                 'game': params[0],
                 'date': params[1],
                 'time': params[2],
-                'maxplayers': params[3] || 999,
+                'maxplayers': params[4] || 999,
                 'attendees': [],
                 'reminded' : null,
-                'channel': message.channel.id
+                'channel': message.channel.id,
+                'host': params[3]
 
             }
             let gameId = app.gameNights.push(gamenight) -1;
             console.log('Created a gamenight with id ' + gameId);
             console.log(gamenight);
+
+            gamenight.attendees.push(params[3]);
+            console.log(gameNight.attendees);
+
             let reply = `@here ${name} vill spela spel!`;
             message.channel.send(reply);
             message.channel.send(app.gameNightTomMessage(gamenight));
@@ -90,7 +96,24 @@ class GameNight extends Plugin{
             message.channel.send("Skriv !attend ID, för att vara med på en kväll");
 
             
+        },
+        'gameinfo': function(message, params){
+            
+            if(params.length != 1){
+                message.reply(app.help.attend);
+                return;
+            }
+
+            console.log("Attempting to get GameInfo about ID" + params[0]);
+
+            let gameNight = app.gameNights[params[0]];
+
+            message.channel.send("Information om :")
+            message.channel.send(app.gameNightTomDetailMessage(gameNight));
+         
         }
+
+
     }
 
 
@@ -121,6 +144,37 @@ class GameNight extends Plugin{
             ]
           }
         }
+    }
+
+    gameNightTomDetailMessage(gn){
+
+        var detailresponse = {embed: {
+            color: 3447003,
+            title: gn.game + " ID: " + app.gameNights.indexOf(gn),
+            fields: [
+                { name: "Datum", value: gn.date, inline: false},
+                { name: "Tid", value: gn.time, inline: false},
+                { name: "Host", value: gn.host, inline: false},  
+                { name: "Spelare", value: gn.attendees.length + "/" + gn.maxplayers, inline: false}
+                
+            ]
+
+          }
+        }
+
+        if(gn.attendees.length > 0){
+            gn.attendees.forEach((attendee) => {
+                detailresponse.embed.fields.push(
+                    {
+                        name: attendee.username,
+                        value: "", //Här kanske man kan lägga till random coola texter om varje spelare?
+                        inline: false
+                    }
+                )
+            })
+        }
+
+        return detailresponse;
     }
 
     tick(client){
