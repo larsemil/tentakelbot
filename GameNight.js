@@ -32,14 +32,14 @@ class GameNight extends Plugin{
                 'attendees': [],
                 'reminded' : null,
                 'channel': message.channel.id,
-                'host': param[3]
+                'host': params[3]
 
             }
             let gameId = app.gameNights.push(gamenight) -1;
             console.log('Created a gamenight with id ' + gameId);
             console.log(gamenight);
 
-            gamenight.attendees.push(param[3]);
+            gamenight.attendees.push(params[3]);
             console.log(gameNight.attendees);
 
             let reply = `@here ${name} vill spela spel!`;
