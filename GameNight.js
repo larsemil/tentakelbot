@@ -13,6 +13,7 @@ class GameNight extends Plugin{
     help = {
         'gamenight': 'För att skapa ett speltillfälle skriv: !gamenight Wingspan 2020-12-12 20:00 usernameFördenSomHostar 5, där sista 5 är antalet spelare(frivilligt)',
         'attend': 'För att delta i ett speltillfälle skriv: !attend n, där n är det spel du vill vara med på.',
+        'abandon': 'För att överge ett speltillfälle skriv: !abandon n, där n är det spel du vill överge.',
         'listgames': 'Lista alla kommande speltillfällen',
         'gameinfo': 'För att få detaljerad info om ett speltillfälle skriv: !gameinfo n, där n är det spel du vill ha information om'
     }
@@ -64,6 +65,7 @@ class GameNight extends Plugin{
             if(!gameNight){
                 console.log('Found no gamenight with id ' + params[0]);
                 message.reply("Hittade ingen spelkväll med det idt. ");
+                return;
             }
             
             if(gameNight.attendees.includes(message.author.username)){
@@ -79,8 +81,44 @@ class GameNight extends Plugin{
             gameNight.attendees.push(message.author.username);
             console.log(gameNight.attendees);
             message.reply("Kul att du ska vara med och spela " + gameNight.game + ", vi ses " + gameNight.date +", kl " + gameNight.time);
-            message.reply("Nu finns det" + app.spotsLeft(gameNight) + " platser kvar")
+            message.reply("Nu finns det " + app.spotsLeft(gameNight) + " platser kvar")
             app.save();
+        },
+        'abandon' : function(message, params){
+            
+            if(params.length != 1){
+                message.reply(app.help.attend);
+                return;
+            }
+
+            console.log(message.author.username +" Abandon GameId: " + params[0]);
+            
+            let gameNight = app.gameNights[params[0]];
+            
+            if(!gameNight){
+                console.log('Found no gamenight with id ' + params[0]);
+                message.reply("Hittade ingen spelkväll med det idt. ");
+                return;
+            }
+            
+            if(gameNight.attendees.includes(message.author.username)){
+                
+                gameNight.attendees.pop(message.author.username); 
+
+                console.log(gameNight.attendees);
+              
+                message.reply("Synd att du missar " + gameNight.game + ", " + gameNight.date +", kl " + gameNight.time);
+                message.reply("Nu finns det " + app.spotsLeft(gameNight) + " platser kvar")
+                app.save();
+               
+            }
+            else{
+                console.log("Not attending, cannot abandon");
+                message.reply("Du är inte anmäld till den här kvällen och kan inte överge den");
+            
+            }
+    
+     
         },
         'listgames': function(message, params){
             
