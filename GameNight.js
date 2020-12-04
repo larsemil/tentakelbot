@@ -1,5 +1,6 @@
 const Plugin = require('./Plugin.js');
 const fs = require('fs');
+const { MessageEmbed } = require('discord.js');
 
 var app = null;
 
@@ -13,6 +14,7 @@ class GameNight extends Plugin{
     help = {
         'gamenight': 'För att skapa ett speltillfälle skriv: !gamenight Wingspan 2020-12-12 20:00 usernameFördenSomHostar 5, där sista 5 är antalet spelare(frivilligt)',
         'attend': 'För att delta i ett speltillfälle skriv: !attend n, där n är det spel du vill vara med på.',
+        'abandon': 'För att överge ett speltillfälle skriv: !abandon n, där n är det spel du vill överge.',
         'listgames': 'Lista alla kommande speltillfällen',
         'gameinfo': 'För att få detaljerad info om ett speltillfälle skriv: !gameinfo n, där n är det spel du vill ha information om'
     }
@@ -40,12 +42,12 @@ class GameNight extends Plugin{
             console.log(gamenight);
 
             gamenight.attendees.push(params[3]);
-            console.log(gameNight.attendees);
+            console.log(gamenight.attendees);
 
             let reply = `@here ${name} vill spela spel!`;
             message.channel.send(reply);
             message.channel.send(app.gameNightTomMessage(gamenight));
-            message.channel.send("skriv !attend" + gameId +" för att vara med")
+            message.channel.send("skriv !attend" + gameId +" för att vara med");
 
             app.save();
             
@@ -64,6 +66,7 @@ class GameNight extends Plugin{
             if(!gameNight){
                 console.log('Found no gamenight with id ' + params[0]);
                 message.reply("Hittade ingen spelkväll med det idt. ");
+                return;
             }
             
             if(gameNight.attendees.includes(message.author.username)){
@@ -79,8 +82,44 @@ class GameNight extends Plugin{
             gameNight.attendees.push(message.author.username);
             console.log(gameNight.attendees);
             message.reply("Kul att du ska vara med och spela " + gameNight.game + ", vi ses " + gameNight.date +", kl " + gameNight.time);
-            message.reply("Nu finns det" + app.spotsLeft(gameNight) + " platser kvar")
+            message.reply("Nu finns det " + app.spotsLeft(gameNight) + " platser kvar");
             app.save();
+        },
+        'abandon' : function(message, params){
+            
+            if(params.length != 1){
+                message.reply(app.help.attend);
+                return;
+            }
+
+            console.log(message.author.username +" Abandon GameId: " + params[0]);
+            
+            let gameNight = app.gameNights[params[0]];
+            
+            if(!gameNight){
+                console.log('Found no gamenight with id ' + params[0]);
+                message.reply("Hittade ingen spelkväll med det idt. ");
+                return;
+            }
+            
+            if(gameNight.attendees.includes(message.author.username)){
+                
+                gameNight.attendees.pop(message.author.username); 
+
+                console.log(gameNight.attendees);
+              
+                message.reply("Synd att du missar " + gameNight.game + ", " + gameNight.date +", kl " + gameNight.time);
+                message.reply("Nu finns det " + app.spotsLeft(gameNight) + " platser kvar");
+                app.save();
+               
+            }
+            else{
+                console.log("Not attending, cannot abandon");
+                message.reply("Du är inte anmäld till den här kvällen och kan inte överge den");
+            
+            }
+    
+     
         },
         'listgames': function(message, params){
             
@@ -104,11 +143,16 @@ class GameNight extends Plugin{
                 return;
             }
 
-            console.log("Attempting to get GameInfo about ID" + params[0]);
+            console.log("Attempting to get GameInfo about ID " + params[0]);
 
             let gameNight = app.gameNights[params[0]];
+            
+            if(!gameNight){
+                console.log('Found no gamenight with id ' + params[0]);
+                message.reply("Hittade ingen spelkväll med det idt. ");
+                return;
+            }
 
-            message.channel.send("Information om :")
             message.channel.send(app.gameNightTomDetailMessage(gameNight));
          
         }
@@ -147,34 +191,22 @@ class GameNight extends Plugin{
     }
 
     gameNightTomDetailMessage(gn){
+        const embed = new MessageEmbed()
+            .setTitle(gn.game + " ID: " + app.gameNights.indexOf(gn))
+            .setColor(3447003)
+            .addField("Datum",gn.date)
+            .addField("Tid",gn.time)
+            .addField("Host",gn.host)
 
-        var detailresponse = {embed: {
-            color: 3447003,
-            title: gn.game + " ID: " + app.gameNights.indexOf(gn),
-            fields: [
-                { name: "Datum", value: gn.date, inline: false},
-                { name: "Tid", value: gn.time, inline: false},
-                { name: "Host", value: gn.host, inline: false},  
-                { name: "Spelare", value: gn.attendees.length + "/" + gn.maxplayers, inline: false}
-                
-            ]
-
-          }
-        }
+        var attendees = "";
 
         if(gn.attendees.length > 0){
-            gn.attendees.forEach((attendee) => {
-                detailresponse.embed.fields.push(
-                    {
-                        name: attendee.username,
-                        value: "", //Här kanske man kan lägga till random coola texter om varje spelare?
-                        inline: false
-                    }
-                )
-            })
+            gn.attendees.forEach((attendee) => { attendees = attendees.concat("| "+attendee); })
         }
 
-        return detailresponse;
+        embed.addField("Spelare   |   "+  gn.attendees.length + "/" + gn.maxplayers, attendees+" |");
+
+        return {embed};
     }
 
     tick(client){
