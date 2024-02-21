@@ -1,7 +1,7 @@
 const Plugin = require('./Plugin.js');
 const random = require('random')
 const rp = require('request-promise');
-const $ = require('cheerio');
+const cheerio = require('cheerio');
 var app = null;
 
 class Day extends Plugin{
@@ -30,6 +30,7 @@ class Day extends Plugin{
             rp(options).then((html) => {
                 console.log('Parsing html');
                 //console.log(html);
+		const $ = cheerio.load(html);
                 let elements = $('#content center a', html);
                 console.log('Found ' + elements.length + ' days today');
     
